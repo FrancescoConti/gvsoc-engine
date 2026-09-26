@@ -29,8 +29,8 @@ System designers can:
     remote engine up to date before forwarding, no modeled latency; a
     response is resynchronized on the next edge of the master clock).
   - Use ``'shared_clock'`` between two domains driven by the same clock
-    (shared edges, no synchronizer on the chip): a response arriving on an
-    edge goes through at once, as inside one domain.
+    (shared edges, no synchronizer on the chip): no resynchronization, only
+    a register slice, a request or a response crossing in one cycle.
   - Override per binding via ``itf_bind(..., clock_bridge='async_fifo')`` or
     ``clock_bridge=('async_fifo', {'depth': 4})``.
   - Set a policy on a parent component via ``set_clock_bridge_policy`` for
@@ -72,7 +72,7 @@ def _sync_only_factory(parent, name, **opts):
 
 def _shared_clock_factory(parent, name, **opts):
     # Two domains driven by the same clock (shared edges, no synchronizer):
-    # a plain relay in the same cycle, see utils.io_v2_shared_clock_bridge.
+    # a one-cycle register slice, see utils.io_v2_shared_clock_bridge.
     from utils.io_v2_shared_clock_bridge import IoV2SharedClockBridge
     if opts:
         raise RuntimeError(
