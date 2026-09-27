@@ -82,6 +82,27 @@ namespace vp
          */
         inline void update(int64_t time);
 
+        /**
+         * @brief Time of the next event of the other clients
+         *
+         * Called from a client's event, this is how far the client can simulate by itself
+         * without overtaking the rest of the platform (e.g. an external simulator stepped
+         * by a component).
+         *
+         * @return The absolute time of the next event, or -1 if there is none
+         */
+        int64_t next_event_time_get() { return this->get_next_event_time(); }
+
+        /**
+         * @brief Tell if the engine was asked to stop
+         *
+         * A client running a long computation inside an event (e.g. an external simulator)
+         * can poll it to return early, so that a pause or quit request is served promptly.
+         *
+         * @return True if a stop has been requested
+         */
+        bool stop_requested() { return this->stop_req; }
+
         void register_clock_engine(vp::ClockEngine *engine);
         std::vector<vp::ClockEngine *> &get_clock_engines() { return this->clock_engines; }
 
